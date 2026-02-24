@@ -1,7 +1,6 @@
 "use client"
 
 import { useState, useRef, useEffect, useTransition } from "react"
-import { useRouter } from "next/navigation"
 import ReactCountryFlag from "react-country-flag"
 import { updateLocale } from "@lib/data/locale-actions"
 
@@ -19,7 +18,6 @@ const LANGUAGES = [
 const LanguageSelect = ({ currentLocale, variant = "dropdown" }: LanguageSelectProps) => {
   const [open, setOpen] = useState(false)
   const [isPending, startTransition] = useTransition()
-  const router = useRouter()
   const ref = useRef<HTMLDivElement>(null)
 
   const current = LANGUAGES.find((l) => l.code === currentLocale) || LANGUAGES[0]
@@ -40,7 +38,8 @@ const LanguageSelect = ({ currentLocale, variant = "dropdown" }: LanguageSelectP
     setOpen(false)
     startTransition(async () => {
       await updateLocale(code)
-      router.refresh()
+      // Hard reload to ensure all server components re-render with new locale
+      window.location.reload()
     })
   }
 

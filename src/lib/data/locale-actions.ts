@@ -64,20 +64,20 @@ export const updateLocale = async (localeCode: string): Promise<string> => {
     }
   }
 
-  // Revalidate relevant caches to refresh content
-  const productsCacheTag = await getCacheTag("products")
-  if (productsCacheTag) {
-    revalidateTag(productsCacheTag)
+  // Revalidate all relevant caches to refresh content with new locale
+  const tagsToRevalidate = ["products", "categories", "collections", "regions", "locales"]
+  for (const tag of tagsToRevalidate) {
+    const cacheTag = await getCacheTag(tag)
+    if (cacheTag) {
+      revalidateTag(cacheTag)
+    }
   }
 
-  const categoriesCacheTag = await getCacheTag("categories")
-  if (categoriesCacheTag) {
-    revalidateTag(categoriesCacheTag)
-  }
-
-  const collectionsCacheTag = await getCacheTag("collections")
-  if (collectionsCacheTag) {
-    revalidateTag(collectionsCacheTag)
+  // Also revalidate without cache id prefix for any global caches
+  for (const tag of tagsToRevalidate) {
+    try {
+      revalidateTag(tag)
+    } catch {}
   }
 
   return localeCode
