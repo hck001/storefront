@@ -9,14 +9,14 @@ export default function NavAccountLink() {
   return (
     <LocalizedClientLink
       href="/account"
-      className="hidden sm:flex items-center gap-2.5 px-3 py-2 rounded-full text-white/60 hover:text-white hover:bg-white/[0.06] transition-all duration-300"
+      className="flex items-center gap-2 px-2 py-2 text-white/70 hover:text-white transition-all duration-300"
       data-testid="nav-account-link"
     >
-      <svg viewBox="0 0 24 24" className="w-[18px] h-[18px]" fill="none" stroke="currentColor" strokeWidth="1.5">
+      <svg viewBox="0 0 24 24" className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="1.5">
         <circle cx="12" cy="8" r="4" />
         <path d="M4 21c0-4 4-7 8-7s8 3 8 7" strokeLinecap="round" />
       </svg>
-      <span className="text-[12px] tracking-[0.05em] font-medium">{t("nav.account")}</span>
+      <span className="hidden sm:inline text-[12px] tracking-[0.05em] font-medium">{t("nav.account")}</span>
     </LocalizedClientLink>
   )
 }

@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, useCallback } from "react"
 import Image from "next/image"
 import Link from "next/link"
+import { useTranslation } from "@lib/i18n/i18n-context"
 
 type SearchProduct = {
   id: string
@@ -15,6 +16,7 @@ type SearchProduct = {
 export default function InstantSearch() {
   const [open, setOpen] = useState(false)
   const [query, setQuery] = useState("")
+  const { t } = useTranslation()
   const [results, setResults] = useState<SearchProduct[]>([])
   const [loading, setLoading] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
@@ -72,39 +74,36 @@ export default function InstantSearch() {
 
   return (
     <>
-      {/* Trigger button — fixed size, never disrupts header */}
+      {/* Trigger — full-width search bar style */}
       <button
         onClick={handleOpen}
-        className="flex items-center gap-2 px-3 py-2 rounded-full text-white/60 hover:text-white hover:bg-white/[0.06] transition-all duration-300"
+        className="flex items-center justify-between w-full max-w-full h-[40px] border border-[#C9A84C]/30 rounded bg-transparent overflow-hidden group hover:border-[#C9A84C]/60 transition-colors"
         aria-label="Search"
       >
-        <svg viewBox="0 0 20 20" className="w-[18px] h-[18px]" fill="none" stroke="currentColor" strokeWidth="1.8">
-          <circle cx="8.5" cy="8.5" r="6" />
-          <path d="M13 13l4.5 4.5" strokeLinecap="round" />
-        </svg>
-        <span className="hidden sm:inline text-[12px] tracking-[0.05em] font-medium">Search</span>
+        <span className="text-white/40 text-[13px] pl-4 text-left flex-1">{t("nav.searchPlaceholder") || "Search..."}</span>
+        <div className="w-[50px] h-full bg-[#C9A84C] flex items-center justify-center transition-colors">
+          <svg viewBox="0 0 24 24" className="w-[18px] h-[18px] text-black" fill="none" stroke="currentColor" strokeWidth="2">
+            <circle cx="11" cy="11" r="6" />
+            <path d="M21 21l-4.35-4.35" strokeLinecap="round" />
+          </svg>
+        </div>
       </button>
 
       {/* Search panel — opens BELOW header as a dropdown */}
       {open && (
         <>
-          {/* Backdrop */}
           <div
             className="fixed inset-0 z-[90] bg-black/50"
             onClick={handleClose}
             style={{ animation: "fadeIn 0.2s ease-out" }}
           />
 
-          {/* Panel anchored below the sticky header */}
           <div
             className="fixed left-0 right-0 z-[100] top-[66px] sm:top-[74px]"
-            style={{
-              animation: "searchDropDown 0.3s cubic-bezier(0.16,1,0.3,1)",
-            }}
+            style={{ animation: "searchDropDown 0.3s cubic-bezier(0.16,1,0.3,1)" }}
           >
             <div style={{ backgroundColor: "rgba(10,10,10,0.98)", backdropFilter: "blur(24px)" }}>
               <div className="content-container">
-                {/* Input row */}
                 <div className="flex items-center gap-4 h-16 sm:h-[72px]">
                   <svg viewBox="0 0 20 20" className="w-5 h-5 text-[#C9A84C] flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="1.8">
                     <circle cx="8.5" cy="8.5" r="6" />
@@ -115,7 +114,7 @@ export default function InstantSearch() {
                     type="text"
                     value={query}
                     onChange={(e) => handleInput(e.target.value)}
-                    placeholder="What are you looking for?"
+                    placeholder={t("nav.searchPlaceholder") || "What are you looking for?"}
                     className="flex-1 bg-transparent text-white text-base sm:text-lg font-light outline-none placeholder-white/25 tracking-wide"
                   />
                   <button
@@ -130,10 +129,8 @@ export default function InstantSearch() {
                 </div>
               </div>
 
-              {/* Separator */}
               <div className="h-[1px] bg-white/[0.06]" />
 
-              {/* Results */}
               {query.length > 0 && (
                 <div className="content-container max-h-[50vh] overflow-y-auto no-scrollbar">
                   {loading && (
@@ -213,7 +210,6 @@ export default function InstantSearch() {
               )}
             </div>
 
-            {/* Bottom shadow line */}
             <div className="h-[1px] bg-white/[0.04]" />
           </div>
         </>
